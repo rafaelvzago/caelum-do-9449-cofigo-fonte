@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatusTopico.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.model</a> &gt; <span class="el_source">StatusTopico.java</span></div><h1>StatusTopico.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.model;
+
+import br.com.alura.forum.model.Resposta;
+
+<span class="fc" id="L5">public enum StatusTopico implements EstadoTopico {</span>
+
+<span class="fc" id="L7">	NAO_RESPONDIDO {</span>
+
+		@Override
+		public void registrarNovaResposta(Topico topico, Resposta resposta) {
+<span class="nc bnc" id="L11" title="All 2 branches missed.">			if (!topico.getAutor().equals(resposta.getAutor())) {</span>
+<span class="nc" id="L12">				topico.setStatus(NAO_SOLUCIONADO);</span>
+			}
+
+<span class="nc" id="L15">			topico.addResposta(resposta);</span>
+<span class="nc" id="L16">		}</span>
+
+		@Override
+		public void marcarComoSolucionado(Topico topico) {
+<span class="nc" id="L20">			topico.setStatus(SOLUCIONADO);</span>
+<span class="nc" id="L21">		}</span>
+
+		@Override
+		public void fechar(Topico topico) {
+<span class="nc" id="L25">			topico.setStatus(FECHADO);</span>
+<span class="nc" id="L26">		}</span>
+	},
+
+<span class="fc" id="L29">	NAO_SOLUCIONADO {</span>
+
+		@Override
+		public void registrarNovaResposta(Topico topico, Resposta resposta) {
+<span class="nc" id="L33">			topico.addResposta(resposta);</span>
+<span class="nc" id="L34">		}</span>
+
+		@Override
+		public void marcarComoSolucionado(Topico topico) {
+<span class="nc" id="L38">			topico.setStatus(SOLUCIONADO);</span>
+<span class="nc" id="L39">		}</span>
+
+		@Override
+		public void fechar(Topico topico) {
+<span class="nc" id="L43">			topico.setStatus(FECHADO);</span>
+<span class="nc" id="L44">		}</span>
+	},
+
+<span class="fc" id="L47">	SOLUCIONADO {</span>
+
+		@Override
+		public void registrarNovaResposta(Topico topico, Resposta resposta) {
+<span class="nc" id="L51">			topico.addResposta(resposta);</span>
+<span class="nc" id="L52">		}</span>
+
+		@Override
+		public void marcarComoSolucionado(Topico topico) {
+<span class="nc" id="L56">			throw new RuntimeException(&quot;Essa dúvida já foi solucionada!&quot;);</span>
+		}
+
+		@Override
+		public void fechar(Topico topico) {
+<span class="nc" id="L61">			throw new RuntimeException(&quot;A dúvida já foi solucionada e deve ser mantida aberta para fins de registro!&quot;);</span>
+		}
+	},
+
+<span class="fc" id="L65">	FECHADO {</span>
+
+		@Override
+		public void registrarNovaResposta(Topico topico, Resposta resposta) {
+<span class="nc" id="L69">			throw new RuntimeException(&quot;Tópico fechado! Não é possível adicionar novas respostas&quot;);</span>
+		}
+
+		@Override
+		public void marcarComoSolucionado(Topico topico) {
+<span class="nc" id="L74">			throw new RuntimeException(&quot;Essa dúvida já está fechada!&quot;);</span>
+		}
+
+		@Override
+		public void fechar(Topico topico) {
+<span class="nc" id="L79">			throw new RuntimeException(&quot;A dúvida já está fechada!&quot;);</span>
+		}
+	};
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

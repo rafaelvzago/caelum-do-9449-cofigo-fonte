@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Usuario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.model</a> &gt; <span class="el_source">Usuario.java</span></div><h1>Usuario.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+@Entity
+public class Usuario implements UserDetails {
+
+	private static final long serialVersionUID = 1L;
+
+<span class="fc" id="L25">	private static final Perfil PERFIL_MODERADOR = new Perfil(&quot;ROLE_MODERADOR&quot;);</span>
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String nome;
+
+	private String senha;
+
+	@Column(nullable = false, unique = true)
+	private String email;
+
+<span class="pc" id="L38">	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})</span>
+	private List&lt;Perfil&gt; perfis = new ArrayList&lt;&gt;();
+
+	/**
+	 * @deprecated
+	 */
+<span class="nc" id="L44">	public Usuario() {</span>
+<span class="nc" id="L45">	}</span>
+
+<span class="fc" id="L47">	public Usuario(String nome, String email, String senha) {</span>
+<span class="fc" id="L48">		this.nome = nome;</span>
+<span class="fc" id="L49">		this.email = email;</span>
+<span class="fc" id="L50">		this.senha = senha;</span>
+<span class="fc" id="L51">	}</span>
+	
+	public boolean isModerador() {
+<span class="nc" id="L54">		return perfis.contains(PERFIL_MODERADOR);</span>
+	}
+	
+	public void addPerfil(Perfil perfil) {
+<span class="nc" id="L58">		this.perfis.add(perfil);</span>
+<span class="nc" id="L59">	}</span>
+	
+	@Override
+	public boolean equals(Object o) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">		if (this == o)</span>
+<span class="nc" id="L64">			return true;</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">		if (o == null || getClass() != o.getClass())</span>
+<span class="nc" id="L66">			return false;</span>
+<span class="nc" id="L67">		Usuario user = (Usuario) o;</span>
+<span class="nc" id="L68">		return Objects.equals(email, user.email);</span>
+	}
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L73">		return Objects.hash(email);</span>
+	}
+
+	public Long getId() {
+<span class="nc" id="L77">		return this.id;</span>
+	}
+	
+	public void setId(Long id) {
+<span class="nc" id="L81">		this.id = id;</span>
+<span class="nc" id="L82">	}</span>
+
+	public String getNome() {
+<span class="nc" id="L85">		return nome;</span>
+	}
+	
+	public void setNome(String nome) {
+<span class="nc" id="L89">		this.nome = nome;</span>
+<span class="nc" id="L90">	}</span>
+
+	public String getSenha() {
+<span class="nc" id="L93">		return this.senha;</span>
+	}
+	
+	public void setSenha(String senha) {
+<span class="nc" id="L97">		this.senha = senha;</span>
+<span class="nc" id="L98">	}</span>
+
+	public String getEmail() {
+<span class="nc" id="L101">		return this.email;</span>
+	}
+	
+	public void setEmail(String email) {
+<span class="nc" id="L105">		this.email = email;</span>
+<span class="nc" id="L106">	}</span>
+	
+	public List&lt;Perfil&gt; getPerfis() {
+<span class="nc" id="L109">		return perfis;</span>
+	}
+	
+	public void setPerfis(List&lt;Perfil&gt; perfis) {
+<span class="nc" id="L113">		this.perfis = perfis;</span>
+<span class="nc" id="L114">	}</span>
+	
+	@Override
+	public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="nc" id="L118">		return perfis;</span>
+	}
+
+	@Override
+	public String getUsername() {
+<span class="nc" id="L123">		return email;</span>
+	}
+	
+	@Override
+	public String getPassword() {
+<span class="nc" id="L128">		return senha;</span>
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+<span class="nc" id="L133">		return true;</span>
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+<span class="nc" id="L138">		return true;</span>
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+<span class="nc" id="L143">		return true;</span>
+	}
+
+	@Override
+	public boolean isEnabled() {
+<span class="nc" id="L148">		return true;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,42 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+alura-forum,br.com.alura.forum.dao,UsuarioDao,56,0,0,0,21,0,6,0,6,0
+alura-forum,br.com.alura.forum.dao,RespostaDao,15,0,0,0,4,0,3,0,3,0
+alura-forum,br.com.alura.forum.dao,CategoriaDao,10,0,0,0,2,0,2,0,2,0
+alura-forum,br.com.alura.forum.dao,CursoDao,10,0,0,0,2,0,2,0,2,0
+alura-forum,br.com.alura.forum.dao,PerfilDao,10,0,0,0,2,0,2,0,2,0
+alura-forum,br.com.alura.forum.dao,TopicoDao,186,0,16,0,46,0,16,0,8,0
+alura-forum,br.com.alura.forum.model,StatusTopico,0,44,0,0,0,5,0,1,0,1
+alura-forum,br.com.alura.forum.model,Resposta,56,0,0,0,19,0,10,0,10,0
+alura-forum,br.com.alura.forum.model,Perfil,69,6,14,0,23,3,13,1,6,1
+alura-forum,br.com.alura.forum.model,Curso,35,9,0,0,10,4,8,1,8,1
+alura-forum,br.com.alura.forum.model,Topico,114,42,4,0,33,16,24,4,22,4
+alura-forum,br.com.alura.forum.model,StatusTopico.new StatusTopico() {...},12,6,0,0,6,1,3,1,3,1
+alura-forum,br.com.alura.forum.model,StatusTopico.new StatusTopico() {...},21,6,2,0,8,1,4,1,3,1
+alura-forum,br.com.alura.forum.model,StatusTopico.new StatusTopico() {...},15,6,0,0,3,1,3,1,3,1
+alura-forum,br.com.alura.forum.model,StatusTopico.new StatusTopico() {...},14,6,0,0,4,1,3,1,3,1
+alura-forum,br.com.alura.forum.model,Usuario,103,23,6,0,34,7,25,2,22,2
+alura-forum,br.com.alura.forum.model,Categoria,47,54,9,5,14,16,11,5,4,5
+alura-forum,br.com.alura.forum.controller,UsuariosController,129,0,6,0,32,0,10,0,7,0
+alura-forum,br.com.alura.forum.controller,HomeController,5,0,0,0,2,0,2,0,2,0
+alura-forum,br.com.alura.forum.controller,TopicosController,192,0,12,0,36,0,16,0,10,0
+alura-forum,br.com.alura.forum.controller,LoginController,5,0,0,0,2,0,2,0,2,0
+alura-forum,br.com.alura.forum.service,CadastroUsuarioService,38,0,4,0,8,0,4,0,2,0
+alura-forum,br.com.alura.forum.service,DashboardService,0,49,0,2,0,10,0,3,0,2
+alura-forum,br.com.alura.forum.service,Md5Service,34,0,0,0,10,0,3,0,3,0
+alura-forum,br.com.alura.forum.service,UsuarioService,17,0,2,0,5,0,3,0,2,0
+alura-forum,br.com.alura.forum.controller.vo,RespostaVo,72,0,0,0,17,0,8,0,8,0
+alura-forum,br.com.alura.forum.controller.vo,DashBoardVo,9,0,0,0,4,0,2,0,2,0
+alura-forum,br.com.alura.forum.controller.vo,FiltrosPesquisaTopicos,31,0,2,0,10,0,8,0,7,0
+alura-forum,br.com.alura.forum.controller.vo,ListaDeTopicosVo,27,0,0,0,8,0,4,0,4,0
+alura-forum,br.com.alura.forum.controller.vo,TopicoVo,189,0,0,0,42,0,25,0,25,0
+alura-forum,br.com.alura.forum.model.vo,DashboardItem,48,29,0,0,9,10,9,4,9,4
+alura-forum,br.com.alura.forum.controller.form,EditarUsuarioForm,10,0,0,0,4,0,3,0,3,0
+alura-forum,br.com.alura.forum.controller.form,CadastrarUsuarioForm,24,0,0,0,10,0,7,0,7,0
+alura-forum,br.com.alura.forum.config,AppWebConfiguration,38,0,0,0,12,0,4,0,4,0
+alura-forum,br.com.alura.forum.config,DataSourceConfiguration,39,0,0,0,13,0,3,0,3,0
+alura-forum,br.com.alura.forum.config,JPAConfiguration,52,0,0,0,14,0,4,0,4,0
+alura-forum,br.com.alura.forum.config,SecurityConfiguration,112,0,0,0,19,0,5,0,5,0
+alura-forum,br.com.alura.forum.config,SpringSecurityFilterConfiguration,3,0,0,0,1,0,1,0,1,0
+alura-forum,br.com.alura.forum.config,ServletSpringMVC,37,0,0,0,5,0,5,0,5,0
+alura-forum,br.com.alura.forum.config,AntiSamyFilter.FilteredRequest,64,0,4,0,15,0,6,0,4,0
+alura-forum,br.com.alura.forum.config,AntiSamyFilter,14,0,0,0,5,0,4,0,4,0

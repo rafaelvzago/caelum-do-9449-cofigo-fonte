@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JPAConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.config</a> &gt; <span class="el_source">JPAConfiguration.java</span></div><h1>JPAConfiguration.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.config;
+
+import java.util.Properties;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+@EnableTransactionManagement
+<span class="nc" id="L18">public class JPAConfiguration {</span>
+	
+	@Autowired
+	private DataSource datasource;
+
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+<span class="nc" id="L25">		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();</span>
+<span class="nc" id="L26">		em.setDataSource(datasource);</span>
+<span class="nc" id="L27">		em.setPackagesToScan(new String[] { &quot;br.com.alura.forum.model&quot; });</span>
+
+<span class="nc" id="L29">		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();</span>
+<span class="nc" id="L30">		em.setJpaVendorAdapter(vendorAdapter);</span>
+<span class="nc" id="L31">		em.setJpaProperties(additionalProperties());</span>
+
+<span class="nc" id="L33">		return em;</span>
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+<span class="nc" id="L38">		JpaTransactionManager transactionManager = new JpaTransactionManager();</span>
+<span class="nc" id="L39">		transactionManager.setEntityManagerFactory(emf);</span>
+<span class="nc" id="L40">		return transactionManager;</span>
+	}
+
+	private Properties additionalProperties() {
+<span class="nc" id="L44">		Properties properties = new Properties();</span>
+<span class="nc" id="L45">		properties.setProperty(&quot;hibernate.dialect&quot;, &quot;org.hibernate.dialect.MySQL5InnoDBDialect&quot;);</span>
+<span class="nc" id="L46">		return properties;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

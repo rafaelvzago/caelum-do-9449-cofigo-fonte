@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Categoria.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.model</a> &gt; <span class="el_source">Categoria.java</span></div><h1>Categoria.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.model;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+@Entity
+public class Categoria {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String nome;
+
+	@ManyToOne
+	private Categoria pai;
+
+<span class="pc" id="L27">	@OneToMany(mappedBy = &quot;pai&quot;)</span>
+	private List&lt;Categoria&gt; subcategorias = new ArrayList&lt;&gt;();
+
+	/**
+	 * @deprecated
+	 */
+<span class="nc" id="L33">	public Categoria() {</span>
+<span class="nc" id="L34">	}</span>
+
+<span class="fc" id="L36">	public Categoria(String nome) {</span>
+<span class="fc" id="L37">		this.nome = nome;</span>
+<span class="fc" id="L38">	}</span>
+
+	public Categoria(String nome, Categoria pai) {
+<span class="fc" id="L41">		this(nome);</span>
+<span class="fc" id="L42">		this.pai = pai;</span>
+<span class="fc" id="L43">	}</span>
+
+	public Long getId() {
+<span class="nc" id="L46">		return id;</span>
+	}
+
+	public String getNome() {
+<span class="fc" id="L50">		return nome;</span>
+	}
+
+	public Optional&lt;Categoria&gt; getPai() {
+<span class="nc" id="L54">		return Optional.ofNullable(this.pai);</span>
+	}
+
+	public List&lt;String&gt; getNomesDasSubcategorias() {
+<span class="fc" id="L58">		return this.subcategorias.stream().map(Categoria::getNome).collect(Collectors.toList());</span>
+	}
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L63">		final int prime = 31;</span>
+<span class="nc" id="L64">		int result = 1;</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		result = prime * result + ((nome == null) ? 0 : nome.hashCode());</span>
+<span class="nc" id="L66">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L72">			return true;</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L74">			return false;</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L76">			return false;</span>
+<span class="fc" id="L77">		Categoria other = (Categoria) obj;</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (nome == null) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (other.nome != null)</span>
+<span class="nc" id="L80">				return false;</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		} else if (!nome.equals(other.nome))</span>
+<span class="fc" id="L82">			return false;</span>
+<span class="nc" id="L83">		return true;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

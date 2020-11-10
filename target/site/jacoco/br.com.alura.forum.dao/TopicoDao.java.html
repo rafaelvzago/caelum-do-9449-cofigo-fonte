@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TopicoDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.dao</a> &gt; <span class="el_source">TopicoDao.java</span></div><h1>TopicoDao.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.dao;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.springframework.stereotype.Repository;
+
+import br.com.alura.forum.controller.vo.FiltrosPesquisaTopicos;
+import br.com.alura.forum.model.Categoria;
+import br.com.alura.forum.model.StatusTopico;
+import br.com.alura.forum.model.Topico;
+
+@Repository
+<span class="nc" id="L18">public class TopicoDao {</span>
+
+	@PersistenceContext
+	private EntityManager em;
+
+	public List&lt;Topico&gt; buscarPorFiltros(FiltrosPesquisaTopicos filtros) {
+<span class="nc" id="L24">		String jpql = &quot;SELECT t FROM Topico t LEFT JOIN FETCH t.respostas WHERE 1=1 &quot;;</span>
+
+<span class="nc bnc" id="L26" title="All 2 branches missed.">		if (filtros.getCategoria() != null) {</span>
+<span class="nc" id="L27">			jpql += &quot;AND t.curso.subcategoria.pai.nome = :categoria &quot;;</span>
+		}
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">		if (filtros.getStatus() != null) {</span>
+<span class="nc" id="L31">			jpql += &quot;AND t.status = :status &quot;;</span>
+		}
+		
+<span class="nc" id="L34">		jpql += &quot;ORDER BY t.dataCriacao DESC, t.titulo&quot;;</span>
+
+<span class="nc" id="L36">		TypedQuery&lt;Topico&gt; query = em</span>
+<span class="nc" id="L37">				.createQuery(jpql, Topico.class)</span>
+<span class="nc" id="L38">				.setFirstResult((filtros.getCurrentPage().intValue() - 1) * 10)</span>
+<span class="nc" id="L39">				.setMaxResults(10);</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">		if (filtros.getCategoria() != null) {</span>
+<span class="nc" id="L42">			query.setParameter(&quot;categoria&quot;, filtros.getCategoria());</span>
+		}
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">		if (filtros.getStatus() != null) {</span>
+<span class="nc" id="L46">			query.setParameter(&quot;status&quot;, filtros.getStatus());</span>
+		}
+
+<span class="nc" id="L49">		return query.getResultList();</span>
+	}
+
+	public Long countPorFiltros(FiltrosPesquisaTopicos filtros) {
+<span class="nc" id="L53">		String jpql = &quot;SELECT count(t) FROM Topico t WHERE 1=1 &quot;;</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		if (filtros.getCategoria() != null) {</span>
+<span class="nc" id="L56">			jpql += &quot;AND t.curso.subcategoria.pai.nome = :categoria &quot;;</span>
+		}
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">		if (filtros.getStatus() != null) {</span>
+<span class="nc" id="L60">			jpql += &quot;AND t.status = :status&quot;;</span>
+		}
+
+<span class="nc" id="L63">		TypedQuery&lt;Long&gt; query = em.createQuery(jpql, Long.class);</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (filtros.getCategoria() != null) {</span>
+<span class="nc" id="L66">			query.setParameter(&quot;categoria&quot;, filtros.getCategoria());</span>
+		}
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">		if (filtros.getStatus() != null) {</span>
+<span class="nc" id="L70">			query.setParameter(&quot;status&quot;, filtros.getStatus());</span>
+		}
+
+<span class="nc" id="L73">		return query.getSingleResult();</span>
+	}
+
+	public Long countPorCategoria(Categoria categoria) {
+<span class="nc" id="L77">		return em</span>
+<span class="nc" id="L78">				.createQuery(&quot;SELECT COUNT(t) FROM Topico t WHERE t.curso.subcategoria.pai = :categoria&quot;, Long.class)</span>
+<span class="nc" id="L79">				.setParameter(&quot;categoria&quot;, categoria)</span>
+<span class="nc" id="L80">				.getSingleResult();</span>
+	}
+
+	public Long countPorCategoriaEAbertosNaUltimaSemana(Categoria categoria) {
+<span class="nc" id="L84">		return em</span>
+<span class="nc" id="L85">				.createQuery(&quot;SELECT COUNT(t) FROM Topico t WHERE t.curso.subcategoria.pai = :categoria AND t.dataCriacao &gt;= :semanaPassada&quot;, Long.class)</span>
+<span class="nc" id="L86">				.setParameter(&quot;categoria&quot;, categoria)</span>
+<span class="nc" id="L87">				.setParameter(&quot;semanaPassada&quot;, LocalDateTime.now().minusWeeks(1))</span>
+<span class="nc" id="L88">				.getSingleResult();</span>
+	}
+
+	public Long countPorCategoriaENaoRespondidos(Categoria categoria) {
+<span class="nc" id="L92">		return em</span>
+<span class="nc" id="L93">				.createQuery(&quot;SELECT COUNT(t) FROM Topico t WHERE t.curso.subcategoria.pai = :categoria AND t.status = :status&quot;, Long.class)</span>
+<span class="nc" id="L94">				.setParameter(&quot;categoria&quot;, categoria)</span>
+<span class="nc" id="L95">				.setParameter(&quot;status&quot;, StatusTopico.NAO_RESPONDIDO)</span>
+<span class="nc" id="L96">				.getSingleResult();</span>
+	}
+
+	public void salvar(Topico topico) {
+<span class="nc" id="L100">		em.persist(topico);</span>
+<span class="nc" id="L101">	}</span>
+
+	public Topico buscarPorId(Long id) {
+<span class="nc" id="L104">		return em.createQuery(&quot;SELECT t FROM Topico t LEFT JOIN FETCH t.respostas WHERE t.id = :id&quot;, Topico.class)</span>
+<span class="nc" id="L105">				.setParameter(&quot;id&quot;, id)</span>
+<span class="nc" id="L106">				.getSingleResult();</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

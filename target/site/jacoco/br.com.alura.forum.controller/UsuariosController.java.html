@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsuariosController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.controller</a> &gt; <span class="el_source">UsuariosController.java</span></div><h1>UsuariosController.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import br.com.alura.forum.controller.form.CadastrarUsuarioForm;
+import br.com.alura.forum.controller.form.EditarUsuarioForm;
+import br.com.alura.forum.dao.UsuarioDao;
+import br.com.alura.forum.model.Usuario;
+import br.com.alura.forum.service.CadastroUsuarioService;
+import br.com.alura.forum.service.Md5Service;
+
+@Controller
+@RequestMapping(&quot;/usuarios&quot;)
+<span class="nc" id="L25">public class UsuariosController {</span>
+	
+	@Autowired
+	private UsuarioDao usuarioDao;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuarioService;
+	
+	@Autowired
+	private Md5Service md5;
+	
+	@GetMapping(&quot;/perfil&quot;)
+	public String carregarPerfil(Model model) {
+<span class="nc" id="L38">		return &quot;perfil&quot;;</span>
+	}
+	
+	@PostMapping(&quot;/perfil&quot;)
+	@Transactional
+	public String alterarDadosDoPerfil(EditarUsuarioForm form, @AuthenticationPrincipal Usuario logado, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L44">		logado = usuarioDao.buscarPorId(logado.getId());</span>
+<span class="nc" id="L45">		logado.setNome(form.getNome());</span>
+		
+<span class="nc" id="L47">		atualizarDadosDoUsuarioLogado(logado);</span>
+<span class="nc" id="L48">		redirectAttributes.addFlashAttribute(&quot;mensagemSucesso&quot;, &quot;Dados atualizados com sucesso!&quot;);</span>
+<span class="nc" id="L49">		return &quot;redirect:/usuarios/perfil&quot;;</span>
+	}
+	
+	@PostMapping(&quot;/perfil/senha&quot;)
+	@Transactional
+	public String alterarSenha(String senhaAtual, String novaSenha, String confirmacaoNovaSenha, @AuthenticationPrincipal Usuario logado, Model model, RedirectAttributes redirectAttributes) {
+<span class="nc" id="L55">		String senhaAtualMd5 = md5.encode(senhaAtual);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">		if (!senhaAtualMd5.equals(logado.getSenha())) {</span>
+<span class="nc" id="L57">			model.addAttribute(&quot;mensagemErro&quot;, &quot;Senha atual não confere!&quot;);</span>
+<span class="nc" id="L58">			return carregarPerfil(model);</span>
+		}
+
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		if (!novaSenha.equals(confirmacaoNovaSenha)) {</span>
+<span class="nc" id="L62">			model.addAttribute(&quot;mensagemErro&quot;, &quot;Nova senha e confirmação não conferem!&quot;);</span>
+<span class="nc" id="L63">			return carregarPerfil(model);</span>
+		}
+		
+<span class="nc" id="L66">		logado.setSenha(md5.encode(novaSenha));</span>
+<span class="nc" id="L67">		usuarioDao.atualizarDados(logado);</span>
+<span class="nc" id="L68">		atualizarDadosDoUsuarioLogado(logado);</span>
+<span class="nc" id="L69">		redirectAttributes.addFlashAttribute(&quot;mensagemSucesso&quot;, &quot;Dados atualizados com sucesso!&quot;);</span>
+<span class="nc" id="L70">		return &quot;redirect:/usuarios/perfil&quot;;</span>
+	}
+	
+	@GetMapping(&quot;/cadastro&quot;)
+	public String carregarFormularioCadastro() {
+<span class="nc" id="L75">		return &quot;form-cadastro&quot;;</span>
+	}
+	
+	@PostMapping(&quot;/cadastro&quot;)
+	public String cadastrarNovoUsuario(CadastrarUsuarioForm form, String confirmacaoSenha, @AuthenticationPrincipal Usuario logado, Model model) {
+		try {
+<span class="nc bnc" id="L81" title="All 2 branches missed.">			if (!form.getSenha().equals(confirmacaoSenha)) {</span>
+<span class="nc" id="L82">				throw new IllegalArgumentException(&quot;Senha e confirmação senha não batem!&quot;);</span>
+			}
+<span class="nc" id="L84">			Usuario novo = new Usuario(form.getNome(), form.getEmail(), form.getSenha());</span>
+<span class="nc" id="L85">			cadastroUsuarioService.cadastrarNovoUsuario(novo);</span>
+<span class="nc" id="L86">			atualizarDadosDoUsuarioLogado(novo);</span>
+<span class="nc" id="L87">			return &quot;redirect:/topicos&quot;;</span>
+<span class="nc" id="L88">		} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L89">			model.addAttribute(&quot;mensagemErro&quot;, e.getMessage());</span>
+<span class="nc" id="L90">			return &quot;form-cadastro&quot;;</span>
+		}
+	}
+	
+	private void atualizarDadosDoUsuarioLogado(Usuario usuario) {
+<span class="nc" id="L95">		Authentication auth = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());</span>
+<span class="nc" id="L96">		SecurityContextHolder.getContext().setAuthentication(auth);</span>
+<span class="nc" id="L97">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

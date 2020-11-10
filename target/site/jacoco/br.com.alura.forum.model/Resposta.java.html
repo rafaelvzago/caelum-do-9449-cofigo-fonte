@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resposta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.model</a> &gt; <span class="el_source">Resposta.java</span></div><h1>Resposta.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.model;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+
+@Entity
+public class Resposta {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Lob
+	private String descricao;
+
+<span class="nc" id="L22">	private LocalDateTime dataCriacao = LocalDateTime.now();</span>
+
+<span class="nc" id="L24">	private boolean solucao = false;</span>
+
+	@ManyToOne
+	private Topico topico;
+
+	@ManyToOne
+	private Usuario autor;
+
+	/**
+	 * @deprecated
+	 */
+<span class="nc" id="L35">	public Resposta() {</span>
+<span class="nc" id="L36">	}</span>
+
+<span class="nc" id="L38">	public Resposta(String descricao, Topico topico, Usuario autor) {</span>
+<span class="nc" id="L39">		this.descricao = descricao;</span>
+<span class="nc" id="L40">		this.topico = topico;</span>
+<span class="nc" id="L41">		this.autor = autor;</span>
+
+<span class="nc" id="L43">		topico.registrarNovaResposta(this);</span>
+<span class="nc" id="L44">	}</span>
+	
+	public void marcarComoSolucao() {
+<span class="nc" id="L47">		this.solucao = true;</span>
+<span class="nc" id="L48">	}</span>
+
+	public Long getId() {
+<span class="nc" id="L51">		return id;</span>
+	}
+
+	public String getDescricao() {
+<span class="nc" id="L55">		return descricao;</span>
+	}
+
+	public LocalDateTime getDataCriacao() {
+<span class="nc" id="L59">		return dataCriacao;</span>
+	}
+
+	public boolean isSolucao() {
+<span class="nc" id="L63">		return solucao;</span>
+	}
+
+	public Topico getTopico() {
+<span class="nc" id="L67">		return topico;</span>
+	}
+
+	public String getNomeAutor() {
+<span class="nc" id="L71">		return this.autor.getNome();</span>
+	}
+
+	public Usuario getAutor() {
+<span class="nc" id="L75">		return autor;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

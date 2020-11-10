@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Md5Service.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.service</a> &gt; <span class="el_source">Md5Service.java</span></div><h1>Md5Service.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.service;
+
+import java.security.MessageDigest;
+
+import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="nc" id="L11">public class Md5Service implements PasswordEncoder {</span>
+
+	public String encode(CharSequence raw) {
+<span class="nc" id="L14">		String rawString = raw.toString();</span>
+		try {
+<span class="nc" id="L16">			MessageDigest md = MessageDigest.getInstance(&quot;MD5&quot;);</span>
+<span class="nc" id="L17">			md.update(rawString.getBytes());</span>
+<span class="nc" id="L18">			byte[] digest = md.digest();</span>
+<span class="nc" id="L19">			return DatatypeConverter.printHexBinary(digest).toLowerCase();</span>
+<span class="nc" id="L20">		} catch (Exception e) {</span>
+<span class="nc" id="L21">			throw new RuntimeException(&quot;Erro ao gerar hash MD5 da senha!&quot;);</span>
+		}
+	}
+
+	@Override
+	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+<span class="nc" id="L27">		String encoded = encode(rawPassword);</span>
+<span class="nc" id="L28">		return encoded.equals(encodedPassword);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

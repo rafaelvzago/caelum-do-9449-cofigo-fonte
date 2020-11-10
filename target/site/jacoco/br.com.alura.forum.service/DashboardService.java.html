@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.service</a> &gt; <span class="el_source">DashboardService.java</span></div><h1>DashboardService.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.alura.forum.dao.CategoriaDao;
+import br.com.alura.forum.dao.TopicoDao;
+import br.com.alura.forum.model.Categoria;
+import br.com.alura.forum.model.vo.DashboardItem;
+
+@Service
+<span class="fc" id="L15">public class DashboardService {</span>
+
+	@Autowired
+	private CategoriaDao categoriaDao;
+
+	@Autowired
+	private TopicoDao topicoDao;
+
+	public List&lt;DashboardItem&gt; buscarDadosDoDashboardDeTopicos() {
+<span class="fc" id="L24">		List&lt;DashboardItem&gt; dados = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L26">		List&lt;Categoria&gt; categorias = categoriaDao.buscarTodasAsCategoriasPrincipais();</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">		for (Categoria principal : categorias) {</span>
+<span class="fc" id="L28">			Long qtdTopicos = topicoDao.countPorCategoria(principal);</span>
+<span class="fc" id="L29">			Long qtdTopicosDaUltimaSemana = topicoDao.countPorCategoriaEAbertosNaUltimaSemana(principal);</span>
+<span class="fc" id="L30">			Long qtdTopicosNaoRespondidos = topicoDao.countPorCategoriaENaoRespondidos(principal);</span>
+
+<span class="fc" id="L32">			dados.add(new DashboardItem(principal, qtdTopicos, qtdTopicosDaUltimaSemana, qtdTopicosNaoRespondidos));</span>
+<span class="fc" id="L33">		}</span>
+
+<span class="fc" id="L35">		return dados;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

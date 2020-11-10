@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListaDeTopicosVo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.controller.vo</a> &gt; <span class="el_source">ListaDeTopicosVo.java</span></div><h1>ListaDeTopicosVo.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.controller.vo;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import br.com.alura.forum.model.Topico;
+
+public class ListaDeTopicosVo {
+
+	private final List&lt;TopicoVo&gt; topicos;
+	private Long totalPages;
+	private Long currentPage;
+
+<span class="nc" id="L14">	public ListaDeTopicosVo(List&lt;Topico&gt; topicos, Long totalPages, Long currentPage) {</span>
+<span class="nc" id="L15">		this.topicos = topicos.stream().map(TopicoVo::new).collect(Collectors.toList());</span>
+<span class="nc" id="L16">		this.totalPages = totalPages;</span>
+<span class="nc" id="L17">		this.currentPage = currentPage;</span>
+<span class="nc" id="L18">	}</span>
+
+	public List&lt;TopicoVo&gt; getTopicos() {
+<span class="nc" id="L21">		return topicos;</span>
+	}
+
+	public Long getCurrentPage() {
+<span class="nc" id="L25">		return currentPage;</span>
+	}
+
+	public Long getTotalPages() {
+<span class="nc" id="L29">		return totalPages;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

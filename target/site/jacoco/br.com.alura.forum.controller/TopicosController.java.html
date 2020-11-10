@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TopicosController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">alura-forum</a> &gt; <a href="index.source.html" class="el_package">br.com.alura.forum.controller</a> &gt; <span class="el_source">TopicosController.java</span></div><h1>TopicosController.java</h1><pre class="source lang-java linenums">package br.com.alura.forum.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import br.com.alura.forum.controller.vo.DashBoardVo;
+import br.com.alura.forum.controller.vo.FiltrosPesquisaTopicos;
+import br.com.alura.forum.controller.vo.ListaDeTopicosVo;
+import br.com.alura.forum.controller.vo.TopicoVo;
+import br.com.alura.forum.dao.CursoDao;
+import br.com.alura.forum.dao.RespostaDao;
+import br.com.alura.forum.dao.TopicoDao;
+import br.com.alura.forum.model.Resposta;
+import br.com.alura.forum.model.Topico;
+import br.com.alura.forum.model.Usuario;
+import br.com.alura.forum.model.vo.DashboardItem;
+import br.com.alura.forum.service.DashboardService;
+
+@Controller
+@RequestMapping(&quot;/topicos&quot;)
+<span class="nc" id="L30">public class TopicosController {</span>
+	
+	private static final int PAGE_SIZE = 10;
+
+	@Autowired
+	private TopicoDao topicoDao;
+	
+	@Autowired
+	private CursoDao cursoDao;
+	
+	@Autowired
+	private RespostaDao respostaDao;
+	
+	@Autowired
+	private DashboardService dashboardService;
+
+	@GetMapping
+	public String listarTopicos(FiltrosPesquisaTopicos filtros, Model model) {
+<span class="nc" id="L48">		carregarDashboard(model);</span>
+<span class="nc" id="L49">		carregarTopicos(filtros, model);</span>
+<span class="nc" id="L50">		return &quot;lista-topicos&quot;;</span>
+	}
+	
+	@GetMapping(&quot;/novo&quot;)
+	public String carregarFormularioNovoTopico(Model model) {
+<span class="nc" id="L55">		model.addAttribute(&quot;cursos&quot;, cursoDao.carregarTodosOsCursos());</span>
+<span class="nc" id="L56">		return &quot;form-topico&quot;;</span>
+	}
+	
+	@PostMapping
+	@Transactional
+	public String cadastrarNovoTopico(Topico topico, @AuthenticationPrincipal Usuario logado) {
+<span class="nc" id="L62">		topico.setAutor(logado);</span>
+<span class="nc" id="L63">		topicoDao.salvar(topico);</span>
+		
+<span class="nc" id="L65">		return &quot;redirect:/topicos&quot;;</span>
+	}
+	
+	@GetMapping(&quot;/{id}&quot;)
+	public String detalharTopico(@PathVariable Long id, Model model) {
+<span class="nc" id="L70">		Topico selecionado = topicoDao.buscarPorId(id);</span>
+<span class="nc" id="L71">		model.addAttribute(&quot;topico&quot;, new TopicoVo(selecionado));</span>
+<span class="nc" id="L72">		return &quot;detalhes-topico&quot;;</span>
+	}
+	
+	@PostMapping(&quot;/{id}/responder&quot;)
+	@Transactional
+	public String responderTopico(Long idTopico, String descricao, @AuthenticationPrincipal Usuario logado) {
+<span class="nc" id="L78">		Topico respondido = topicoDao.buscarPorId(idTopico);</span>
+<span class="nc" id="L79">		Resposta nova = new Resposta(descricao, respondido, logado);</span>
+<span class="nc" id="L80">		respostaDao.salvar(nova);</span>
+<span class="nc" id="L81">		return &quot;redirect:/topicos/&quot; +idTopico;</span>
+	}
+	
+	@PostMapping(&quot;/{id}/solucionar&quot;)
+	@Transactional
+	public String marcarTopicoComoSolucionado(@PathVariable Long id, Long idResposta, @AuthenticationPrincipal Usuario logado) {
+<span class="nc" id="L87">		Topico solucionado = topicoDao.buscarPorId(id);</span>
+		
+<span class="nc bnc" id="L89" title="All 4 branches missed.">		if (logado.equals(solucionado.getAutor()) || logado.isModerador()) {</span>
+<span class="nc" id="L90">			solucionado.marcarComoSolucionado();</span>
+			
+<span class="nc" id="L92">			Resposta solucao = respostaDao.buscarPorId(idResposta);</span>
+<span class="nc" id="L93">			solucao.marcarComoSolucao();</span>
+		}
+		
+<span class="nc" id="L96">		return &quot;redirect:/topicos/&quot; +id;</span>
+	}
+	
+	@PostMapping(&quot;/{id}/fechar&quot;)
+	@Transactional
+	public String fecharTopico(@PathVariable Long id, @AuthenticationPrincipal Usuario logado) {
+<span class="nc" id="L102">		Topico fechado = topicoDao.buscarPorId(id);</span>
+		
+<span class="nc bnc" id="L104" title="All 4 branches missed.">		if (logado.equals(fechado.getAutor()) || logado.isModerador()) {</span>
+<span class="nc" id="L105">			fechado.fechar();</span>
+		}
+		
+<span class="nc" id="L108">		return &quot;redirect:/topicos/&quot; +id;</span>
+	}
+
+	private void carregarDashboard(Model model) {
+<span class="nc" id="L112">		List&lt;DashboardItem&gt; itensDashboard = dashboardService.buscarDadosDoDashboardDeTopicos();</span>
+<span class="nc" id="L113">		model.addAttribute(&quot;dashboardVo&quot;, new DashBoardVo(itensDashboard));</span>
+<span class="nc" id="L114">	}</span>
+
+	private void carregarTopicos(FiltrosPesquisaTopicos filtros, Model model) {
+<span class="nc" id="L117">		List&lt;Topico&gt; todos = topicoDao.buscarPorFiltros(filtros);</span>
+<span class="nc" id="L118">		Long count = topicoDao.countPorFiltros(filtros);</span>
+		
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		Long totalPages = count == 0 ? 0 : count / PAGE_SIZE;</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">		if(totalPages % PAGE_SIZE != 0) {</span>
+<span class="nc" id="L122">			totalPages++;</span>
+		}
+		
+<span class="nc" id="L125">		model.addAttribute(&quot;listaDeTopicosVo&quot;, new ListaDeTopicosVo(todos, totalPages, filtros.getCurrentPage()));</span>
+<span class="nc" id="L126">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
